@@ -1,0 +1,2 @@
+docklib==1.1.1
+pyobjc==6.2.2
