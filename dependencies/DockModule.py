@@ -54,7 +54,10 @@ class customDock(Dock):
         else:
             items = self.listAll(type)
             for i in items:
-                self.remove(i[i.rindex("/")+1:-4])
-            
+                if type=="apps":
+                    self.remove(i[i.rindex("/")+1:-4])
+                else:
+                    self.remove(i[i.rindex("/")+1:])
+
 
     
