@@ -1,3 +1,2 @@
 docklib==1.1.1
 pyobjc==6.2.2
-webbrowser==2.7.18
