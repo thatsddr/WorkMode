@@ -23,3 +23,7 @@ class Background():
             self._CURRENT = path
         else:
             return Exception
+        
+    def restore(self):
+        '''resets the background to the previous image, if possible''' 
+        self.change(self._PREVIOUS)
