@@ -3,3 +3,4 @@ pyobjc==6.2.2
 beepy
 multithreading
 osascript
+PyQt5
