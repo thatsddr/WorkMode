@@ -3,7 +3,7 @@ from time import sleep
 from os.path import isfile
 
 class Background():
-    '''Simple class to change background'''
+    '''Simple class to change the background easily and using the usascript module instead of subprocess'''
     def __init__(self):
         '''gets the path of the current background, when it changes the value of the previous background is stored in another variable'''
         self._PREVIOUS = ''
