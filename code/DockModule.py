@@ -4,6 +4,15 @@ import os
 #docklib on github: https://github.com/homebysix/docklib/blob/pypi/docklib/docklib.py
 
 class customDock(Dock):
+    '''extention of docklib (https://github.com/homebysix/docklib/blob/pypi/docklib/docklib.py) with methods to:
+    add one item to the dock,
+    add multiple items to the dock,
+    add one URL the dock
+    add multiple URLs to the dock
+    remove one item from the dock
+    remove all items in a section of the dock
+    list all items in the dock
+    '''
     def __init__(self):
         super().__init__()
 
@@ -17,7 +26,7 @@ class customDock(Dock):
         if path[path.rindex("/"):]:
             self.items[section] = [self.makeDockAppEntry(path.replace("%20", " "))] + self.items[section]
         else:
-            print("Not Found")
+            return Exception
 
     def addMultiple(self, paths):
         '''add multiple apps from a list of paths'''
