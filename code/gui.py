@@ -9,6 +9,7 @@ import beepy
 from DockModule import customDock
 from BackgroundModule import Background
 from DNDModule import DND
+from ApplicationModule import Application
 
 normalBG = "/System/Library/Desktop Pictures/Catalina.heic"
 workBG = "/System/Library/Desktop Pictures/Mojave.heic"
@@ -18,6 +19,15 @@ workDock = ['/Applications/Google Chrome.app', '/Applications/Visual Studio Code
 
 
 class MyThread(QThread):
+
+    def open(self, path, wantToOpen):
+        self.path = path
+        self.app = Application(self.path)
+        if wantToOpen:
+            self.app.open()
+        else:
+            self.app.close()
+
     def switchMode(self, d, bg, dndOn):
         self.DnD = DND()
         self.dock = customDock()
@@ -71,6 +81,7 @@ class Window(QMainWindow):
         self.thread = MyThread()
         self.thread.web()
         self.thread.switchMode(workDock, workBG, True)
+        self.thread.open('/Applications/Notion.app', True)
         
     
     def end_program(self):
@@ -78,6 +89,7 @@ class Window(QMainWindow):
         print("Bye world")
         self.thread = MyThread()
         self.thread.switchMode(normalDock, normalBG, False)
+        self.thread.open('/Applications/Notion.app', False)
 
 
     # method called by button 
