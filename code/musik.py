@@ -1,11 +1,12 @@
 import webbrowser
 from time import sleep
+import beepy
 #url_music = URl for the music 
 #url_work = Work website
 
 def webbrowsers(url_music,url_work):
         webbrowser.open_new(url_music)
-        sleep(5)
+        beepy.beep(6)
         webbrowser.open_new_tab(url_work)
 
 #ecample call
