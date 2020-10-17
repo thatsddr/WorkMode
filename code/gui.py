@@ -3,6 +3,15 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import * 
 from PyQt5 import QtGui
 import sys 
+from PyQt5.QtCore import Qt,QThread, pyqtSignal
+
+import musik
+import beepy
+
+class MyThread(QThread):
+     
+    def web(self):
+        musik.webbrowsers("https://www.youtube.com/watch?v=kg-xtouq3oc&list=RDEMB4pXSfqexQjAYE27XBWebA&start_radio=1","http://stackoverflow.com")
 
 
 class Window(QMainWindow): 
@@ -38,6 +47,9 @@ class Window(QMainWindow):
     def start_program(self):
         ##Fill the other modules and functions here (working mode)
         print("Hello world")
+        self.thread = MyThread()
+        self.thread.web()
+        
     
     def end_program(self):
         ##Fill the other modules and functions here (back)
@@ -61,8 +73,7 @@ class Window(QMainWindow):
             self.button.setStyleSheet("background-color : red")
             self.button.setText("🔆")
     
-  
-  
+    
   
 # create pyqt5 app 
 App = QApplication(sys.argv) 
