@@ -2,14 +2,15 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import * 
 from PyQt5.QtWidgets import * 
 from PyQt5 import QtGui
-import sys 
 from PyQt5.QtCore import Qt,QThread, pyqtSignal
-
+import sys 
 import musik
 import beepy
 
 class MyThread(QThread):
-     
+    def backanddock(self):
+        #your function
+
     def web(self):
         musik.webbrowsers("https://www.youtube.com/watch?v=kg-xtouq3oc&list=RDEMB4pXSfqexQjAYE27XBWebA&start_radio=1","http://stackoverflow.com")
 
@@ -21,8 +22,6 @@ class Window(QMainWindow):
         self.setFixedSize(300, 150)
         # set the title 
         self.setWindowTitle("WorkMode")
-        
-
 
         # creating a push button 
         self.button = QPushButton("🔆", self) 
