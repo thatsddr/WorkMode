@@ -6,9 +6,30 @@ from PyQt5.QtCore import Qt,QThread, pyqtSignal
 import sys 
 import musik
 import beepy
+from DockModule import customDock
+from BackgroundModule import Background
+from DNDModule import DND
+
+normalBG = "/System/Library/Desktop Pictures/Catalina.heic"
+workBG = "/System/Library/Desktop Pictures/Mojave.heic"
+
+normalDock = ['/Applications/Safari.app', '/Applications/Google Chrome.app', '/Applications/Visual Studio Code.app', '/Applications/iTerm.app', '/Applications/Slack.app', '/Applications/Notion.app']
+workDock = ['/Applications/Google Chrome.app', '/Applications/Visual Studio Code.app', '/Applications/Xcode.app', '/Applications/zoom.us.app', '/Applications/Discord.app',  '/Applications/Slack.app',  '/System/Applications/Reminders.app', '/Applications/iTerm.app', '/System/Applications/Stocks.app']
+
 
 class MyThread(QThread):
-    def backanddock(self):
+    def switchMode(self, d, bg, dndOn):
+        self.DnD = DND()
+        self.dock = customDock()
+        self.back = Background()
+        self.back.change(bg)
+        self.dock.removeAll()
+        self.dock.addMultiple(reversed(d))
+        self.dock.save()
+        if dndOn:
+            self.DnD.turnOn()
+        else:
+            self.DnD.turnOff()
         #your function
 
     def web(self):
@@ -46,13 +67,18 @@ class Window(QMainWindow):
     def start_program(self):
         ##Fill the other modules and functions here (working mode)
         print("Hello world")
+        
         self.thread = MyThread()
         self.thread.web()
+        self.thread.switchMode(workDock, workBG, True)
         
     
     def end_program(self):
         ##Fill the other modules and functions here (back)
         print("Bye world")
+        self.thread = MyThread()
+        self.thread.switchMode(normalDock, normalBG, False)
+
 
     # method called by button 
     def changeColor(self): 
