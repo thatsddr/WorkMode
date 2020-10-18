@@ -9,15 +9,24 @@ import beepy
 from DockModule import customDock
 from BackgroundModule import Background
 from DNDModule import DND
+from ApplicationModule import Application
 
 normalBG = "/System/Library/Desktop Pictures/Catalina.heic"
-workBG = "/System/Library/Desktop Pictures/Mojave.heic"
+workBG = "/Users/felixheilingbrunner/Downloads/eBackpack/EXTRAS/#fourthdimension/Rainbow.jpg"
 
-normalDock = ['/Applications/Safari.app', '/Applications/Google Chrome.app', '/Applications/Visual Studio Code.app', '/Applications/iTerm.app', '/Applications/Slack.app', '/Applications/Notion.app']
-workDock = ['/Applications/Google Chrome.app', '/Applications/Visual Studio Code.app', '/Applications/Xcode.app', '/Applications/zoom.us.app', '/Applications/Discord.app',  '/Applications/Slack.app',  '/System/Applications/Reminders.app', '/Applications/iTerm.app', '/System/Applications/Stocks.app']
+normalDock = ['/Applications/Safari.app',  '/Applications/Notion.app', '/Applications/Slack.app', '/Applications/Discord.app', '/Applications/League of Legends']
+workDock = ['/Applications/Google Chrome.app', '/Applications/Slack.app', '/Applications/Visual Studio Code.app', '/Applications/Xcode.app', '/Applications/zoom.us.app',]
 
 
 class MyThread(QThread):
+
+    def openApplication(self):
+        self.oapp = Application('/Applications/Notion.app')
+        self.oapp.open()
+ 
+
+
+
     def switchMode(self, d, bg, dndOn):
         self.DnD = DND()
         self.dock = customDock()
@@ -28,8 +37,10 @@ class MyThread(QThread):
         self.dock.save()
         if dndOn:
             self.DnD.turnOn()
+            self.openApplication()
         else:
             self.DnD.turnOff()
+
         #your function
 
     def web(self):
@@ -44,11 +55,17 @@ class Window(QMainWindow):
         # set the title 
         self.setWindowTitle("WorkMode")
 
-        # creating a push button 
-        self.button = QPushButton("🔆", self) 
+        #self.p = self.palette()
+        #self.p.setColor(self.backgroundRole(), Qt.red)
+        #elf.setPalette(self.p)
+        self.setStyleSheet("background : url(image3.png)")
 
+        # creating a push button 
+        self.button = QPushButton(" 🔆 ", self) 
+        self.settings = QPushButton("⚙️", self)
         # setting geometry of button 
         self.button.setGeometry(110, 55, 80, 40) 
+        self.settings.setGeometry(0,0,40,30)
 
         # setting checkable to true 
         self.button.setCheckable(True) 
@@ -57,7 +74,7 @@ class Window(QMainWindow):
         self.button.clicked.connect(self.changeColor) 
   
         # setting default color of button to light-grey 
-        self.button.setStyleSheet("background-color : red") 
+        self.button.setStyleSheet("background : url(image2.png); border-style: solid; border-width: 2px; border-color: blue")
   
         # show all the widgets 
         self.update() 
@@ -87,7 +104,7 @@ class Window(QMainWindow):
         if self.button.isChecked(): 
             self.start_program()
             # setting background color to light-blue 
-            self.button.setStyleSheet("background-color : lightgreen")
+            self.button.setStyleSheet("background-image : url(image.png);")
             self.button.setText("💼")
 
   
@@ -95,7 +112,7 @@ class Window(QMainWindow):
         else: 
             self.end_program()
             # set background color back to light-grey 
-            self.button.setStyleSheet("background-color : red")
+            self.button.setStyleSheet("background : url(image2.png)")
             self.button.setText("🔆")
     
     
