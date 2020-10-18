@@ -9,6 +9,7 @@ class Application():
         if os.path.isdir(path) and path[-4:] == ".app":
             self.path = path
             self.name = path[path.rindex("/") + 1:-4]
+            print("OK")
         else:
             raise Exception
     
@@ -18,7 +19,9 @@ class Application():
     def open(self):
         if not self.isOpen():
             os.system("open " + self.path)
+            print("open " + self.path)
     
     def close(self):
         if self.isOpen():
             osascript.run('quit app "' + self.name + '"')
+            print("quit app " + self.name)
