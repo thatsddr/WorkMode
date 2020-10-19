@@ -21,7 +21,9 @@ workDock = ['/Applications/Google Chrome.app', '/Applications/Slack.app', '/Appl
 
 
 class MyThread(QThread):
+""" Class child form QThread opens programms in different Threads """
 
+    #Opens Application -> will turn into for loop that opens all programs from settings.json
     def openApplication(self):
         self.oapp = Application('/Applications/Notion.app')
         self.oapp.open()
