@@ -4,3 +4,4 @@ beepy
 multithreading
 osascript
 PyQt5
+rumps
