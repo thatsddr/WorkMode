@@ -2,6 +2,7 @@ import rumps
 import sys 
 import musik
 import beepy
+import settings
 from DockModule import customDock
 from BackgroundModule import Background
 from DNDModule import DND
@@ -49,7 +50,8 @@ class taskBarApp(rumps.App):
         self.work = rumps.MenuItem("Work Mode", callback=self.switchMode)
         self.saveWM = rumps.MenuItem("Save As WorkMode", callback=self.saveW)
         self.saveNM = rumps.MenuItem("Save As NormalMode", callback=self.saveN)
-        self.menu = [self.work, self.saveNM, self.saveWM]
+        self.osettings = rumps.MenuItem("Open Settings", callback=settings.openSettings)
+        self.menu = [self.work, self.saveNM, self.saveWM, self.osettings]
         self.title = "🔆"
     
     def loadSettigns(self):
