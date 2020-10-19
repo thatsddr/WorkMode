@@ -6,10 +6,12 @@ from PyQt5.QtCore import Qt,QThread, pyqtSignal
 import sys 
 import musik
 import beepy
+import settings
 from DockModule import customDock
 from BackgroundModule import Background
 from DNDModule import DND
 from ApplicationModule import Application
+import icon_module as im
 
 normalBG = "/System/Library/Desktop Pictures/Catalina.heic"
 workBG = "/Users/felixheilingbrunner/Downloads/eBackpack/EXTRAS/#fourthdimension/Rainbow.jpg"
@@ -71,11 +73,22 @@ class Window(QMainWindow):
         self.button.setCheckable(True) 
   
         # setting calling method by button 
-        self.button.clicked.connect(self.changeColor) 
+        self.button.clicked.connect(self.changeColor)
+        self.settings.clicked.connect(settings.openSettings)
   
         # setting default color of button to light-grey 
         self.button.setStyleSheet("background : url(image2.png); border-style: solid; border-width: 2px; border-color: blue")
-  
+
+        ####Taskbar test
+
+        # Create the icon
+        self.icon = QIcon(im.makeicon('yellow'))
+
+# Create the tray
+        self.tray = QSystemTrayIcon()
+        self.tray.setIcon(self.icon)
+        self.tray.setVisible(True)
+
         # show all the widgets 
         self.update() 
         self.show() 
@@ -106,6 +119,8 @@ class Window(QMainWindow):
             # setting background color to light-blue 
             self.button.setStyleSheet("background-image : url(image.png);")
             self.button.setText("💼")
+            self.icon = QIcon(im.makeicon('green'))
+            self.tray.setIcon(self.icon)
 
   
         # if it is unchecked 
@@ -114,14 +129,16 @@ class Window(QMainWindow):
             # set background color back to light-grey 
             self.button.setStyleSheet("background : url(image2.png)")
             self.button.setText("🔆")
+            self.icon = QIcon(im.makeicon('yellow'))
+            self.tray.setIcon(self.icon)
     
     
-  
+def guipy(): 
 # create pyqt5 app 
-App = QApplication(sys.argv) 
+    App = QApplication(sys.argv) 
   
 # create the instance of our Window 
-window = Window() 
+    window = Window() 
   
 # start the app 
-sys.exit(App.exec()) 
+    sys.exit(App.exec()) 
