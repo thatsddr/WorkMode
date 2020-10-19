@@ -15,3 +15,4 @@ def getSetting(arg):
     return res[arg]
 
 def updtSettings(arg,data):
+#Your code here
