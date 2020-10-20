@@ -132,7 +132,8 @@ class taskBarApp(rumps.App):
         self.thread.web()
         self.title = "💼"
         settings.updtSettings('mode',"work")
-        rumps.notification(title=self.name, subtitle="You are now in work mode", message="")
+        if settings.getSettings('notification')=="True":
+            rumps.notification(title=self.name, subtitle="You are now in work mode", message="")
         
     def end_program(self):
         self.thread = MyThread()
@@ -140,7 +141,8 @@ class taskBarApp(rumps.App):
         self.thread.open(False)
         self.title = "🔆"
         settings.updtSettings('mode',"free")
-        rumps.notification(title=self.name, subtitle="You are now in normal mode", message="")
+        if settings.getSettings('notification')=="True":
+            rumps.notification(title=self.name, subtitle="You are now in normal mode", message="")
     
     def switchMode(self, sender):
         if self.isSaved('work') and self.isSaved('normal'):
