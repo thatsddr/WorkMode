@@ -94,7 +94,14 @@ class taskBarApp(rumps.App):
             self.config["workBG"] = None
             self.config["normalDock"] = None
             self.config["workDock"] = None
-
+        
+        if not hasattr(res, "mode"):
+            settings.updtSettings("mode", "free")
+        if not hasattr(res, "Links"):
+            settings.updtSettings("mode", [])
+        if not hasattr(res, "mode"):
+            settings.updtSettings("apps", [])
+            
     def settingsCallback(self, _):
         settings.openSettings()
 
