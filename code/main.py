@@ -96,9 +96,10 @@ class taskBarApp(rumps.App):
         if not hasattr(res, "mode"):
             settings.updtSettings("mode", "free")
         if not hasattr(res, "Links"):
-            settings.updtSettings("mode", [])
-        if not hasattr(res, "mode"):
-            settings.updtSettings("apps", [])
+            settings.updtSettings("Links", ["https://www.youtube.com/watch?v=kg-xtouq3oc&list=RDEMB4pXSfqexQjAYE27XBWebA&start_radio=1",
+		"http://stackoverflow.com"])
+        if not hasattr(res, "apps"):
+            settings.updtSettings("apps", ["/Applications/Notion.app"])
             
     def settingsCallback(self, _):
         settings.openSettings()
