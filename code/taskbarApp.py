@@ -26,29 +26,26 @@ class MyThread(QThread):
                 self.app.close()
 
     def switchMode(self, d, bg):
+        self.DnD = DND()
         self.mode = settings.getSetting('mode')
         if self.mode == "free":
-            dndOn = False
+            self.DnD.turnOn()
             d = settings.getSetting('workDock')
             bg = settings.getSetting('workBG')
         elif self.mode == "work":
-            dndOn = True
+            self.DnD.turnOff()
             d = settings.getSetting('normalDock')
             bg = settings.getSetting('normalBG')
         else:
             Exception
         
-        self.DnD = DND()
+        
         self.dock = customDock()
         self.backg = Background()
         self.backg.change(bg)
         self.dock.removeAll()
         self.dock.addMultiple(reversed(d))
         self.dock.save()
-        if dndOn:
-            self.DnD.turnOn()
-        else:
-            self.DnD.turnOff()
     #Opens the Links (in settings) in Webbrowser
     def web(self):
         self.links = settings.getSetting('Links')
@@ -68,7 +65,7 @@ class taskBarApp(rumps.App):
         self.work = rumps.MenuItem("Work Mode", callback=self.switchMode)
         self.saveWM = rumps.MenuItem("Save As WorkMode", callback=self.saveW)
         self.saveNM = rumps.MenuItem("Save As NormalMode", callback=self.saveN)
-        self.osettings = rumps.MenuItem("Open Settings", callback=settings.openSettings)
+        self.osettings = rumps.MenuItem("Open Settings", callback=self.settingsCallback)
         self.menu = [self.work, self.saveNM, self.saveWM, self.osettings]
         self.title = self.getmode()
     #The right label is shown now. (after reboot as well) but to get out you first need to enter workmode (again)
@@ -97,6 +94,9 @@ class taskBarApp(rumps.App):
             self.config["workBG"] = None
             self.config["normalDock"] = None
             self.config["workDock"] = None
+
+    def settingsCallback(self, _):
+        settings.openSettings()
 
     def isSaved(self, type):
         if type not in ["normal", "work"]:
