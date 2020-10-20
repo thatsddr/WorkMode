@@ -59,7 +59,7 @@ class taskBarApp(rumps.App):
                     'workBG': None,
                     'normalDock' : None,
                     'workDock' : None}
-        self.loadSettings()
+        self.loadSettigns()
         self.work = rumps.MenuItem("Work Mode", callback=self.switchMode)
         self.saveWM = rumps.MenuItem("Save As WorkMode", callback=self.saveW)
         self.saveNM = rumps.MenuItem("Save As NormalMode", callback=self.saveN)
@@ -76,7 +76,7 @@ class taskBarApp(rumps.App):
             self.work.state = 1
             return "💼"
 
-    def loadSettings(self):
+    def loadSettigns(self):
         res = None
         try:
             res = settings.loadAll()
@@ -92,15 +92,7 @@ class taskBarApp(rumps.App):
             self.config["workBG"] = None
             self.config["normalDock"] = None
             self.config["workDock"] = None
-        
-        if not hasattr(res, "mode"):
-            settings.updtSettings("mode", "free")
-        if not hasattr(res, "Links"):
-            settings.updtSettings("Links", ["https://www.youtube.com/watch?v=kg-xtouq3oc&list=RDEMB4pXSfqexQjAYE27XBWebA&start_radio=1",
-		"http://stackoverflow.com"])
-        if not hasattr(res, "apps"):
-            settings.updtSettings("apps", ["/Applications/Notion.app"])
-            
+
     def settingsCallback(self, _):
         settings.openSettings()
 
