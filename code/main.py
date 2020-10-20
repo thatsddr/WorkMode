@@ -9,3 +9,4 @@ if __name__ == '__main__':
     p1.start()
     p2 = Process(target = taskitem.taskBar,args=())
     p2.start()
+

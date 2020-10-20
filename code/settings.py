@@ -7,6 +7,12 @@ def openSettings():
     file = "settings.json"
     subprocess.call(['open', '-a', 'TextEdit', file])
 
+def loadAll():
+    with open("settings.json", "r") as s:
+        res = json.load(s)
+        s.close()
+    return res
+
 def getSetting(arg):
     """ This function takes 1 arg and returns the associated setting item """
     with open("settings.json", "r") as s:
@@ -15,5 +21,17 @@ def getSetting(arg):
     return res[arg]
 
 def updtSettings(arg,data):
-    print("upd")
-#Your code here
+    temp = loadAll()
+    try:
+        temp[arg] = data
+    except:
+        return
+    with open("settings.json", "w") as file:
+        json.dump(temp, file)
+    file.close()
+
+def updateAll(data):
+    with open("settings.json", "w") as file:
+        json.dump(data, file)
+    file.close()
+

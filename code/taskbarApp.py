@@ -3,25 +3,41 @@ import sys
 import musik
 import beepy
 import settings
+import webbrowser
+import settings
+import json
 from DockModule import customDock
 from BackgroundModule import Background
 from DNDModule import DND
 from ApplicationModule import Application
 from PyQt5.QtCore import Qt,QThread, pyqtSignal
-import json
 
 #yes, I wanted to import this from gui but for some reason it didn't work
 
 class MyThread(QThread):
-    def open(self, path, wantToOpen):
-        self.path = path
-        self.app = Application(self.path)
-        if wantToOpen:
-            self.app.open()
-        else:
-            self.app.close()
+    #opens apps (from settings)
+    def open(self, wantToOpen):
+        self.paths = settings.getSetting('apps')
+        for self.path in self.paths:
+            self.app = Application(self.path)
+            if wantToOpen:
+                self.app.open()
+            else:
+                self.app.close()
 
-    def switchMode(self, d, bg, dndOn):
+    def switchMode(self, d, bg):
+        self.mode = settings.getSetting('mode')
+        if self.mode == "free":
+            dndOn = False
+            d = settings.getSetting('workDock')
+            bg = settings.getSetting('workBG')
+        elif self.mode == "work":
+            dndOn = True
+            d = settings.getSetting('normalDock')
+            bg = settings.getSetting('normalBG')
+        else:
+            Exception
+        
         self.DnD = DND()
         self.dock = customDock()
         self.backg = Background()
@@ -33,10 +49,12 @@ class MyThread(QThread):
             self.DnD.turnOn()
         else:
             self.DnD.turnOff()
-        
-
+    #Opens the Links (in settings) in Webbrowser
     def web(self):
-        musik.webbrowsers("https://www.youtube.com/watch?v=kg-xtouq3oc&list=RDEMB4pXSfqexQjAYE27XBWebA&start_radio=1","http://stackoverflow.com")
+        self.links = settings.getSetting('Links')
+        for self.link in self.links:
+            webbrowser.open_new(self.link)
+        
 
 #from the taskbar icon, change the mode
 class taskBarApp(rumps.App):
@@ -52,14 +70,21 @@ class taskBarApp(rumps.App):
         self.saveNM = rumps.MenuItem("Save As NormalMode", callback=self.saveN)
         self.osettings = rumps.MenuItem("Open Settings", callback=settings.openSettings)
         self.menu = [self.work, self.saveNM, self.saveWM, self.osettings]
-        self.title = "🔆"
-    
+        self.title = self.getmode()
+    #The right label is shown now. (after reboot as well) but to get out you first need to enter workmode (again)
+    def getmode(self):
+        self.mode = settings.getSetting('mode')
+        if self.mode == "free":
+            self.work.state = 0
+            return "🔆"
+        else: 
+            self.work.state = 1
+            return "💼"
+
     def loadSettigns(self):
         res = None
         try:
-            with open("settings.json", "r") as s:
-                res = json.load(s)
-            s.close()
+            res = settings.loadAll()
             for t in ["normal", "work"]:
                 if self.isSaved(t):
                     self.config[t+"Dock"] = res[t+"Dock"]
@@ -78,9 +103,7 @@ class taskBarApp(rumps.App):
             raise Exception
         res = None
         try:
-            with open("settings.json", "r") as s:
-                res = json.load(s)
-            s.close()
+            res = settings.loadAll()
             if res[type + "BG"] and res[type + "Dock"]:
                 return True
             else:
@@ -99,23 +122,26 @@ class taskBarApp(rumps.App):
         self.save()
     
     def save(self):
-        with open("settings.json", "w") as file:
-            json.dump(self.config, file)
-        file.close()
+        settings.updtSettings("normalBG", self.config["normalBG"])
+        settings.updtSettings("workBG", self.config["workBG"])
+        settings.updtSettings("normalDock", self.config["normalDock"])
+        settings.updtSettings("workDock", self.config["normalDock"])
     
     def start_program(self):
         self.thread = MyThread()
-        #self.thread.web()
-        self.thread.switchMode(self.config['workDock'], self.config['workBG'], True)
-        self.thread.open('/Applications/Notion.app', True)
+        self.thread.switchMode(self.config['workDock'], self.config['workBG'])
+        self.thread.open(True)
+        self.thread.web()
         self.title = "💼"
+        settings.updtSettings('mode',"work")
         rumps.notification(title=self.name, subtitle="You are now in work mode", message="")
         
     def end_program(self):
         self.thread = MyThread()
-        self.thread.switchMode(self.config['normalDock'], self.config['normalBG'], False)
-        self.thread.open('/Applications/Notion.app', False)
+        self.thread.switchMode(self.config['normalDock'], self.config['normalBG'])
+        self.thread.open(False)
         self.title = "🔆"
+        settings.updtSettings('mode',"free")
         rumps.notification(title=self.name, subtitle="You are now in normal mode", message="")
     
     def switchMode(self, sender):
