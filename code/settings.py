@@ -1,5 +1,6 @@
 import os
 import subprocess
+import json
 
 def openSettings():
     """ This function opens the settings.json in textEdit """
@@ -8,3 +9,11 @@ def openSettings():
 
 def getSetting(arg):
     """ This function takes 1 arg and returns the associated setting item """
+    with open("settings.json", "r") as s:
+        res = json.load(s)
+        s.close()
+    return res[arg]
+
+def updtSettings(arg,data):
+    print("upd")
+#Your code here
