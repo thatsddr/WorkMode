@@ -1,6 +1,5 @@
 import rumps
 import sys 
-import musik
 import beepy
 import settings
 import webbrowser
