@@ -7,7 +7,7 @@ OPTIONS = {
     'plist': {
         'LSUIElement': True,
     },
-    'packages': ['rumps'],
+    'packages': ['docklib','pyobjc','PyQt5','osascript','rumps'],
 }
 
 setup(
