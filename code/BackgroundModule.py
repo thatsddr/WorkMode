@@ -16,10 +16,9 @@ class Background():
     def change(self, path):
         '''sets the background if the path is to a file '''
         if isfile(path):
-            script = '''tell application "Finder"
-            set desktop picture to POSIX file "%s"
+            script = f'''tell application "System Events" to set picture of every desktop to "{path}"
             END'''
-            res = osascript.run(script%path)
+            res = osascript.run(script)
             if res[2] != '':
                 return Exception
             sleep(1)
