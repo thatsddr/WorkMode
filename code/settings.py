@@ -8,10 +8,13 @@ def openSettings():
     subprocess.call(['open', '-a', 'TextEdit', file])
 
 def loadAll():
-    with open("settings.json", "r") as s:
-        res = json.load(s)
-        s.close()
-    return res
+    try:
+        with open("settings.json", "r") as s:
+            res = json.load(s)
+            s.close()
+        return res
+    except:
+        pass
 
 def getSetting(arg):
     """ This function takes 1 arg and returns the associated setting item """
