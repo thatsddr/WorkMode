@@ -60,7 +60,7 @@ class taskBarApp(rumps.App):
                     'workBG': None,
                     'normalDock' : None,
                     'workDock' : None}
-        self.loadSettigns()
+        self.loadSettings()
         self.work = rumps.MenuItem("Work Mode", callback=self.switchMode)
         self.saveWM = rumps.MenuItem("Save As WorkMode", callback=self.saveW)
         self.saveNM = rumps.MenuItem("Save As NormalMode", callback=self.saveN)
@@ -77,7 +77,7 @@ class taskBarApp(rumps.App):
             self.work.state = 1
             return "💼"
 
-    def loadSettigns(self):
+    def loadSettings(self):
         res = None
         try:
             res = settings.loadAll()
