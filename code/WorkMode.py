@@ -2,7 +2,6 @@ import rumps
 import sys 
 import settings
 import webbrowser
-import settings
 import json
 from DockModule import customDock
 from BackgroundModule import Background
@@ -132,8 +131,7 @@ class taskBarApp(rumps.App):
         self.thread.web()
         self.title = "💼"
         settings.updtSettings('mode',"work")
-        if settings.getSettings('notification')=="True":
-            rumps.notification(title=self.name, subtitle="You are now in work mode", message="")
+        rumps.notification(title=self.name, subtitle="You are now in work mode", message="")
         
     def end_program(self):
         self.thread = MyThread()
@@ -141,8 +139,7 @@ class taskBarApp(rumps.App):
         self.thread.open(False)
         self.title = "🔆"
         settings.updtSettings('mode',"free")
-        if settings.getSettings('notification')=="True":
-            rumps.notification(title=self.name, subtitle="You are now in normal mode", message="")
+        rumps.notification(title=self.name, subtitle="You are now in normal mode", message="")
     
     def switchMode(self, sender):
         if self.isSaved('work') and self.isSaved('normal'):
