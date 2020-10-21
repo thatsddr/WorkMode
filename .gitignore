@@ -5,3 +5,5 @@ test*.py
 test.py
 venv/
 settings.json
+dist/
+build/
