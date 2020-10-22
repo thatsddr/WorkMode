@@ -34,12 +34,12 @@ class MyThread(QThread):
             d = settings.getSetting('normalDock')
             bg = settings.getSetting('normalBG')
         else:
-            Exception
+            pass
         
-        
-        self.dock = customDock()
         self.backg = Background()
         self.backg.change(bg)
+        self.dock = customDock()
+        
         self.dock.removeAll()
         self.dock.addMultiple(reversed(d))
         self.dock.save()
