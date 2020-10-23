@@ -20,7 +20,11 @@ Manually modifying the settings.json file before the first run to remove apps th
 To build the app, first install py2app with the command
 `pip3 install py2app`
 
+Then, symply run
+`python3 setup.py py2app`
+
 At this point you will be able to run the app with all its functionalities from ./dist/WorkMode.app/Contents/WorkMode, while only the background will change if you open it by clicking on WorkMode.app.
+
 
 ## Errors
 
