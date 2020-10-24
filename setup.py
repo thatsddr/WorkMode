@@ -10,7 +10,7 @@ OPTIONS = {'argv_emulation': True,
                 'CFBundleDisplayName': "WorkMode",
                 'CFBundleVersion': "0.1.0",
                 'CFBundleShortVersionString': "0.1.0",
-                'NSHumanReadableCopyright': "Copyright © 2015, Felix Heilingbrunner, Domenico Di Ruocco, All Rights Reserved"
+                'NSHumanReadableCopyright': "Copyright © 2020, Felix Heilingbrunner, Domenico Di Ruocco, All Rights Reserved"
             },
             'includes':['rumps', 'docklib', 'pyobjc', 'PyQt5', 'osascript', 'webbrowser']
 }
