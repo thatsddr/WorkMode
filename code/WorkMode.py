@@ -59,11 +59,12 @@ class taskBarApp(rumps.App):
                     'normalDock' : None,
                     'workDock' : None}
         self.loadSettigns()
-        self.work = rumps.MenuItem("Work Mode", callback=self.switchMode)
-        self.saveWM = rumps.MenuItem("Save As WorkMode", callback=self.saveW)
-        self.saveNM = rumps.MenuItem("Save As NormalMode", callback=self.saveN)
-        self.osettings = rumps.MenuItem("Open Settings", callback=self.settingsCallback)
-        self.menu = [self.work, self.saveNM, self.saveWM, self.osettings]
+        self.work = rumps.MenuItem("Work Mode", callback=self.switchMode, key="M")
+        self.saveWM = rumps.MenuItem("Save As Work Mode", callback=self.saveW)
+        self.saveNM = rumps.MenuItem("Save As Normal Mode", callback=self.saveN)
+        self.osettings = rumps.MenuItem("Open settings.json", callback=self.settingsCallback)
+        self.info = rumps.MenuItem("About...", callback=self.showInfo)
+        self.menu = [self.work, None, {"Preferences": [self.saveNM, self.saveWM, self.osettings]}, None, self.info]
         self.title = self.getmode()
     #The right label is shown now. (after reboot as well) but to get out you first need to enter workmode (again)
     def getmode(self):
@@ -74,6 +75,11 @@ class taskBarApp(rumps.App):
         else: 
             self.work.state = 1
             return "💼"
+
+    def showInfo(self, _):
+        w = rumps.Window(message="WorkMode™️ v0.1.0", default_text="Copyright © 2020 Felix Heilingbrunner & Domenico Di Ruocco, All Rights Reserved.\n\nUnreleased product. Do not distribute.", title="About WorkMode", dimensions=(380, 100))
+        w._textfield.setSelectable_(False)
+        w.run()
 
     def loadSettigns(self):
         res = None
