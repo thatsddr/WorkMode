@@ -12,7 +12,7 @@ Once you're sure that python 3.8.6 is installed run the command
 
 At this point you're ready to check if the program runs by running the command
 `python3 code/WorkMode.py`
-But BE CAREFUL: Save your current configuration with "🔆>Save as NormalMode".
+But BE CAREFUL: Save your current configuration with "🔆>Preferences>Save as Normal Mode".
 Manually modifying the settings.json file before the first run to remove apps that are not installed on the machine is adviced.
 
 ## Building the app
