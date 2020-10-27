@@ -7,3 +7,4 @@ venv/
 settings.json
 dist/
 build/
+.eggs/
