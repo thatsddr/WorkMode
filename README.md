@@ -38,5 +38,4 @@ We’ve tried to use previous versions of python (3.6.x and 3.7.x) as well as ol
 
 When turing off the DnD mode, the icon in the top-right corner of the mac (the Notification Center Icon) doesn not become black again but stays gray.
 Having the DnD mode to turn on/off instantly wasn't however our plan, but we planned to have a pomodoro timer and DnD mode synced with it, but that's no longer to be realized in the MVP.
-If you decide to fix this issue and you find online that you can solve it by symulating the ALT+Click keystrokes, DO NOT DO THAT.
 
