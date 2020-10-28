@@ -66,16 +66,18 @@ class taskBarApp(rumps.App):
         self.menu = [self.work, None, {"Preferences": [self.saveNM, self.saveWM, self.osettings]}, None, self.info]
         #initialize the title
         self.title = self.getmode()
+        #check if change mode can have a callback
+        self.checkSaved()
 
     def getmode(self):
         '''returns 🔆 if in free mode or 💼 if in workmode'''
         self.mode = settings.getSetting('mode')
-        if self.mode == "free":
-            self.work.state = 0
-            return "🔆"
-        else: 
+        if self.mode == "work":   
             self.work.state = 1
             return "💼"
+        else: 
+            self.work.state = 0
+            return "🔆"
 
     def showInfo(self, _):
         '''shows info windows'''
@@ -119,17 +121,27 @@ class taskBarApp(rumps.App):
         except:
             return False
     
+    def checkSaved(self):
+        if self.isSaved("normal") and self.isSaved("work"):
+            self.work.set_callback(self.switchMode)
+        else:
+            self.work.set_callback(None)
+    
     def saveW(self, _):
         '''saves the current mode as work mode'''
         self.config["workDock"] = customDock().listAll()
         self.config["workBG"] = Background().getPath()
         self.save()
+        #check if change mode can have a callback
+        self.checkSaved()
     
     def saveN(self, _):
         '''saves the current mode as normal mode'''
         self.config["normalDock"] = customDock().listAll()
         self.config["normalBG"] = Background().getPath()
         self.save()
+        #check if change mode can have a callback
+        self.checkSaved()
     
     def save(self):
         '''updates the settings with the mode saved'''

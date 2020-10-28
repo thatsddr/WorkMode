@@ -8,17 +8,27 @@ def openSettings():
 
 def loadAll():
     '''returns all of the settings'''
-    with open("settings.json", "r") as s:
-        res = json.load(s)
-        s.close()
-    return res
+    try:
+        with open("settings.json", "r") as s:
+            res = json.load(s)
+            s.close()
+        return res
+    except:
+        with open("settings.json", "w+") as s:
+            default = {'normalBG': None, 'workBG': None, 'normalDock' : None, 'workDock' : None, "apps": ["/Applications/Notion.app"], "mode": "free", "notification": "True"}
+            json.dump(default, s)
+            s.close()
+            return default
 
 def getSetting(arg):
     ''' This function takes 1 arg and returns the associated setting item '''
-    with open("settings.json", "r") as s:
-        res = json.load(s)
-        s.close()
-    return res[arg]
+    try:
+        with open("settings.json", "r") as s:
+            res = json.load(s)
+            s.close()
+        return res[arg]
+    except:
+        return None
 
 def updtSettings(arg,data):
     '''updates one setting in the settings,json file'''
