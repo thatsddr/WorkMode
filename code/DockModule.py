@@ -1,5 +1,4 @@
 from docklib import Dock
-import os
 
 #docklib on github: https://github.com/homebysix/docklib/blob/pypi/docklib/docklib.py
 

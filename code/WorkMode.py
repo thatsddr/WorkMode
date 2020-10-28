@@ -1,19 +1,15 @@
 import rumps
-import sys 
 import settings
 import webbrowser
-import json
 from DockModule import customDock
 from BackgroundModule import Background
 from DNDModule import DND
 from ApplicationModule import Application
-from PyQt5.QtCore import Qt,QThread, pyqtSignal
 
-#yes, I wanted to import this from gui but for some reason it didn't work
-
-class MyThread(QThread):
-    #opens apps (from settings)
+class Thread():
+    
     def open(self, wantToOpen):
+        #opens apps (from settings)
         self.paths = settings.getSetting('apps')
         for self.path in self.paths:
             self.app = Application(self.path)
@@ -21,8 +17,9 @@ class MyThread(QThread):
                 self.app.open()
             else:
                 self.app.close()
-
+    
     def switchMode(self, d, bg):
+        #changes background, dock and DND
         self.DnD = DND()
         self.mode = settings.getSetting('mode')
         if self.mode == "free":
@@ -39,35 +36,39 @@ class MyThread(QThread):
         self.backg = Background()
         self.backg.change(bg)
         self.dock = customDock()
-        
         self.dock.removeAll()
         self.dock.addMultiple(reversed(d))
         self.dock.save()
-    #Opens the Links (in settings) in Webbrowser
+    
     def web(self):
+        #Opens the Links (in settings) in Webbrowser
         self.links = settings.getSetting('Links')
         for self.link in self.links:
             webbrowser.open_new(self.link)
         
 
-#from the taskbar icon, change the mode
 class taskBarApp(rumps.App):
+    '''main class'''
     def __init__(self, name):
         super(taskBarApp, self).__init__(name)
+        #initialize settings
         self.config={'normalBG': None,
                     'workBG': None,
                     'normalDock' : None,
                     'workDock' : None}
         self.loadSettigns()
+        #initialize menu items
         self.work = rumps.MenuItem("Work Mode", callback=self.switchMode, key="M")
         self.saveWM = rumps.MenuItem("Save As Work Mode", callback=self.saveW)
         self.saveNM = rumps.MenuItem("Save As Normal Mode", callback=self.saveN)
         self.osettings = rumps.MenuItem("Open settings.json", callback=self.settingsCallback)
         self.info = rumps.MenuItem("About...", callback=self.showInfo)
         self.menu = [self.work, None, {"Preferences": [self.saveNM, self.saveWM, self.osettings]}, None, self.info]
+        #initialize the title
         self.title = self.getmode()
-    #The right label is shown now. (after reboot as well) but to get out you first need to enter workmode (again)
+
     def getmode(self):
+        '''returns 🔆 if in free mode or 💼 if in workmode'''
         self.mode = settings.getSetting('mode')
         if self.mode == "free":
             self.work.state = 0
@@ -77,11 +78,13 @@ class taskBarApp(rumps.App):
             return "💼"
 
     def showInfo(self, _):
+        '''shows info windows'''
         w = rumps.Window(message="WorkMode™️ v0.1.0", default_text="Copyright © 2020 Felix Heilingbrunner & Domenico Di Ruocco, All Rights Reserved.\n\nUnreleased product. Do not distribute.", title="About WorkMode", dimensions=(380, 100))
         w._textfield.setSelectable_(False)
         w.run()
 
     def loadSettigns(self):
+        '''fetches settings from settings.json file'''
         res = None
         try:
             res = settings.loadAll()
@@ -99,9 +102,11 @@ class taskBarApp(rumps.App):
             self.config["workDock"] = None
 
     def settingsCallback(self, _):
+        '''makes the above function callable by the menu item'''
         settings.openSettings()
 
     def isSaved(self, type):
+        '''checks if the current mode is saved'''
         if type not in ["normal", "work"]:
             raise Exception
         res = None
@@ -115,23 +120,27 @@ class taskBarApp(rumps.App):
             return False
     
     def saveW(self, _):
+        '''saves the current mode as work mode'''
         self.config["workDock"] = customDock().listAll()
         self.config["workBG"] = Background().getPath()
         self.save()
     
     def saveN(self, _):
+        '''saves the current mode as normal mode'''
         self.config["normalDock"] = customDock().listAll()
         self.config["normalBG"] = Background().getPath()
         self.save()
     
     def save(self):
+        '''updates the settings with the mode saved'''
         settings.updtSettings("normalBG", self.config["normalBG"])
         settings.updtSettings("workBG", self.config["workBG"])
         settings.updtSettings("normalDock", self.config["normalDock"])
         settings.updtSettings("workDock", self.config["normalDock"])
     
     def start_program(self):
-        self.thread = MyThread()
+        '''calls everything related to the work mode'''
+        self.thread = Thread()
         self.thread.switchMode(self.config['workDock'], self.config['workBG'])
         self.thread.open(True)
         self.thread.web()
@@ -141,7 +150,8 @@ class taskBarApp(rumps.App):
             rumps.notification(title=self.name, subtitle="You are now in work mode", message="")
         
     def end_program(self):
-        self.thread = MyThread()
+        '''calls everything related to the normal mode'''
+        self.thread = Thread()
         self.thread.switchMode(self.config['normalDock'], self.config['normalBG'])
         self.thread.open(False)
         self.title = "🔆"
@@ -150,6 +160,7 @@ class taskBarApp(rumps.App):
             rumps.notification(title=self.name, subtitle="You are now in normal mode", message="")
     
     def switchMode(self, sender):
+        '''callable from the menu item, makes the mode switch possible'''
         if self.isSaved('work') and self.isSaved('normal'):
             if sender.state == 0:
                 self.start_program()
@@ -160,4 +171,4 @@ class taskBarApp(rumps.App):
             rumps.notification(title=self.name, subtitle="Please, set both modes", message=f"Work mode set: {self.isSaved('work')}\nNormal mode set: {self.isSaved('normal')}")
 
 if __name__ == "__main__":
-    taskBarApp("MacMode").run()
+    taskBarApp("WorkMode").run()
