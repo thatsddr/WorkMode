@@ -26,13 +26,11 @@ Then, symply run
 At this point you will be able to run the app with all its functionalities from ./dist/WorkMode.app/Contents/WorkMode, while only the background will change if you open it by clicking on WorkMode.app.
 
 
-## Errors
+## Problems
 
-From the built-in console app the following error occurs when running the app from the icon and not when running it from the binary file.
-`#-67062: Error Domain=NSOSStatusErrorDomain Code=-67062 "(null)"`
-However, this error is pretty generic and is about the compiled app and not our python script.
+For some reason, the app only works properly when launched with sudo privileges, otherwise it won't change the dock. If you have any idea why this happens, please let us know!
 
-## What has been tryed
+### What has been tryed
 
 We’ve tried to use previous versions of python (3.6.x and 3.7.x) as well as older versions of py2app (0.21, 0.20, 0.19 and 0.12) and PyInstaller. Nothing worked.
 
