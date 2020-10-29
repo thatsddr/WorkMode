@@ -1,4 +1,4 @@
-# venus
+# WorkMode
 python mac app for the ID brief
 
 ## Requirements
