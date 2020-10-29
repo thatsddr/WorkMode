@@ -81,7 +81,7 @@ class taskBarApp(rumps.App):
 
     def showInfo(self, _):
         '''shows info windows'''
-        w = rumps.Window(message="WorkMode™️ v0.1.0", default_text="Copyright © 2020 Felix Heilingbrunner & Domenico Di Ruocco, All Rights Reserved.\n\nUnreleased product. Do not distribute.", title="About WorkMode", dimensions=(380, 100))
+        w = rumps.Window(message="WorkMode v0.1.0", default_text="Copyright © 2020 Felix Heilingbrunner & Domenico Di Ruocco, All Rights Reserved.\n\nUnreleased product. Do not distribute.", title="About WorkMode", dimensions=(380, 100))
         w._textfield.setSelectable_(False)
         w.run()
 
