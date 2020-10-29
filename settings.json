@@ -1,25 +1,8 @@
 {
-	"normalBG": "/System/Library/Desktop Pictures/Catalina.heic",
-	"workBG": "/System/Library/Desktop Pictures/Mojave.heic",
-	"normalDock": [
-		"/Applications/Safari.app",
-		"/Applications/Google Chrome.app",
-		"/Applications/Visual Studio Code.app",
-		"/Applications/iTerm.app",
-		"/Applications/Slack.app",
-		"/Applications/Notion.app"
-	],
-	"workDock": [
-		"/Applications/Google Chrome.app",
-		"/Applications/Visual Studio Code.app",
-		"/Applications/Xcode.app",
-		"/Applications/zoom.us.app",
-		"/Applications/Discord.app",
-		"/Applications/Slack.app",
-		"/System/Applications/Reminders.app",
-		"/Applications/iTerm.app",
-		"/Applications/Notion.app"
-	],
+	"normalBG": null,
+ 	"workBG": null,
+ 	"normalDock": [],
+ 	"workDock": [],
 	"Links": [
 		"https://www.youtube.com/watch?v=kg-xtouq3oc&list=RDEMB4pXSfqexQjAYE27XBWebA&start_radio=1",
 		"http://stackoverflow.com"
