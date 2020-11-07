@@ -16,18 +16,71 @@ class taskBarApp(rumps.App):
                     'normalDock' : None,
                     'workDock' : None}
         self.loadSettings()
+        #timer config
+
+        self.timerConfig = {
+            'title': "Timer",
+            'interval': 1500,
+            "start": "Start Timer",
+            "pause": "Pause Timer",
+            "continue": "Continue Timer",
+            "stop": "Stop Timer"
+        }
+        self.timer = rumps.Timer(self.on_tick, 1)
+        
         #initialize menu items
         self.work = rumps.MenuItem("Work Mode", callback=self.switchMode, key="M")
         self.saveWM = rumps.MenuItem("Save As Work Mode", callback=self.saveW)
         self.saveNM = rumps.MenuItem("Save As Normal Mode", callback=self.saveN)
         self.osettings = rumps.MenuItem("Open settings.json", callback=self.settingsCallback)
         self.info = rumps.MenuItem("About...", callback=self.showInfo)
-        self.menu = [self.work, None, {"Preferences": [self.saveNM, self.saveWM, self.osettings]}, None, self.info]
+        #timer-relevant stuff
+        self.playPauseTimer = rumps.MenuItem("Start Timer", callback=self.start_timer)
+        self.stopTimer = rumps.MenuItem("Stop Timer", callback=self.stop_timer)
+        self.timerButton = rumps.MenuItem("--:--")
+        #menu final structure
+        self.menu = [self.work, None, {"Preferences": [self.saveNM, self.saveWM, self.osettings]}, None, self.timerButton, {"Timer Settings": [self.playPauseTimer, self.stopTimer]}, None,self.info]
         #initialize the title
         self.title = self.getmode()
         #check if change mode can have a callback
         self.checkSaved()
 
+        self.reset_timer()
+
+    def reset_timer(self):
+        self.timer.stop()
+        self.timer.count = 0
+        self.stopTimer.set_callback(None)
+        self.timerButton.title = "--:--"
+        
+    def on_tick(self, sender):
+        time_left = sender.end - sender.count
+        mins = time_left // 60 if time_left >= 0 else time_left // 60 + 1
+        secs = time_left % 60 if time_left >= 0 else (-1 * time_left) % 60
+        if mins == 0 and time_left < 0:
+            rumps.notification(title=self.name, subtitle="Take a break", message='')
+            self.stop_timer()
+            self.stopTimer.set_callback(None)
+        else:
+            self.stopTimer.set_callback(self.stop_timer)
+            self.timerButton.title = '{:2d}:{:02d}'.format(mins, secs)
+        sender.count += 1
+    def start_timer(self, sender):
+        if sender.title.lower().startswith(("start", "continue")):
+            if sender.title == self.timerConfig["start"]:
+                self.timer.count = 0
+                self.timer.end = self.timerConfig['interval']
+            self.timerButton.title= self.timerConfig["pause"]
+            self.timer.start()
+        else:
+            self.timerButton.title = self.timerConfig["continue"]
+            self.timer.stop()
+
+    def stop_timer(self, _):
+        self.reset_timer()
+        self.stopTimer.set_callback(None)
+        self.playPauseTimer.title = self.timerConfig["start"]
+    
     def getmode(self):
         '''returns 🔆 if in free mode or 💼 if in workmode'''
         self.mode = settings.getSetting('mode')
