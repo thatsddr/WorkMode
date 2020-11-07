@@ -18,7 +18,6 @@ class taskBarApp(rumps.App):
         #timer config
 
         self.timerConfig = {
-            'title': "--:--",
             'interval': 1500,
             "start": "Start Timer",
             "pause": "Pause Timer",
@@ -61,6 +60,7 @@ class taskBarApp(rumps.App):
             self.stopTimer.set_callback(self.stop_timer_callback)
             self.title = self.getmode() + " - " + '{:02d}:{:02d}'.format(mins, secs)
         sender.count += 1
+
     def start_timer(self, sender):
         if sender.title.lower().startswith(("start", "continue")):
             if sender.title == self.timerConfig["start"]:
