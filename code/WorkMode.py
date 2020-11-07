@@ -1,51 +1,10 @@
 import rumps
 import settings
-import webbrowser
+from ThreadModule import Thread
 from DockModule import customDock
 from BackgroundModule import Background
-from DNDModule import DND
 from ApplicationModule import Application
 
-class Thread():
-    
-    def open(self, wantToOpen):
-        #opens apps (from settings)
-        self.paths = settings.getSetting('apps')
-        for self.path in self.paths:
-            self.app = Application(self.path)
-            if wantToOpen:
-                self.app.open()
-            else:
-                self.app.close()
-    
-    def switchMode(self, d, bg):
-        #changes background, dock and DND
-        self.DnD = DND()
-        self.mode = settings.getSetting('mode')
-        if self.mode == "free":
-            self.DnD.turnOn()
-            d = settings.getSetting('workDock')
-            bg = settings.getSetting('workBG')
-        elif self.mode == "work":
-            self.DnD.turnOff()
-            d = settings.getSetting('normalDock')
-            bg = settings.getSetting('normalBG')
-        else:
-            pass
-        
-        self.backg = Background()
-        self.backg.change(bg)
-        self.dock = customDock()
-        self.dock.removeAll()
-        self.dock.addMultiple(reversed(d))
-        self.dock.save()
-    
-    def web(self):
-        #Opens the Links (in settings) in Webbrowser
-        self.links = settings.getSetting('Links')
-        for self.link in self.links:
-            webbrowser.open_new(self.link)
-        
 
 class taskBarApp(rumps.App):
     '''main class'''
@@ -56,7 +15,7 @@ class taskBarApp(rumps.App):
                     'workBG': None,
                     'normalDock' : None,
                     'workDock' : None}
-        self.loadSettigns()
+        self.loadSettings()
         #initialize menu items
         self.work = rumps.MenuItem("Work Mode", callback=self.switchMode, key="M")
         self.saveWM = rumps.MenuItem("Save As Work Mode", callback=self.saveW)
@@ -85,7 +44,7 @@ class taskBarApp(rumps.App):
         w._textfield.setSelectable_(False)
         w.run()
 
-    def loadSettigns(self):
+    def loadSettings(self):
         '''fetches settings from settings.json file'''
         res = None
         try:
@@ -150,6 +109,8 @@ class taskBarApp(rumps.App):
         settings.updtSettings("normalDock", self.config["normalDock"])
         settings.updtSettings("workDock", self.config["normalDock"])
     
+    #what to do when switching mode and function called from the WorkMode Button
+
     def start_program(self):
         '''calls everything related to the work mode'''
         self.thread = Thread()
