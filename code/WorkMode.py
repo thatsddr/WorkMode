@@ -5,7 +5,6 @@ from DockModule import customDock
 from BackgroundModule import Background
 from ApplicationModule import Application
 
-
 class taskBarApp(rumps.App):
     '''main class'''
     def __init__(self, name):
@@ -19,15 +18,16 @@ class taskBarApp(rumps.App):
         #timer config
 
         self.timerConfig = {
-            'title': "Timer",
-            'interval': 1500,
+            #12 spaces to center the title, don't know if it works with every font size
+            'spaces':"            ",
+            'title': "--:--",
+            'interval': 15,
             "start": "Start Timer",
             "pause": "Pause Timer",
             "continue": "Continue Timer",
             "stop": "Stop Timer"
         }
         self.timer = rumps.Timer(self.on_tick, 1)
-        
         #initialize menu items
         self.work = rumps.MenuItem("Work Mode", callback=self.switchMode, key="M")
         self.saveWM = rumps.MenuItem("Save As Work Mode", callback=self.saveW)
@@ -36,10 +36,10 @@ class taskBarApp(rumps.App):
         self.info = rumps.MenuItem("About...", callback=self.showInfo)
         #timer-relevant stuff
         self.playPauseTimer = rumps.MenuItem("Start Timer", callback=self.start_timer)
-        self.stopTimer = rumps.MenuItem("Stop Timer", callback=self.stop_timer)
-        self.timerButton = rumps.MenuItem("--:--")
+        self.stopTimer = rumps.MenuItem("Stop Timer", callback=self.stop_timer_callback)
+        self.timerButton = rumps.MenuItem(self.timerConfig['spaces'] + self.timerConfig['title'])
         #menu final structure
-        self.menu = [self.work, None, {"Preferences": [self.saveNM, self.saveWM, self.osettings]}, None, self.timerButton, {"Timer Settings": [self.playPauseTimer, self.stopTimer]}, None,self.info]
+        self.menu = [self.work, None, self.timerButton, {"🍅 Clock":[self.playPauseTimer, self.stopTimer]}, None, {"Preferences": [self.saveNM, self.saveWM, self.osettings]}, None,self.info]
         #initialize the title
         self.title = self.getmode()
         #check if change mode can have a callback
@@ -51,7 +51,7 @@ class taskBarApp(rumps.App):
         self.timer.stop()
         self.timer.count = 0
         self.stopTimer.set_callback(None)
-        self.timerButton.title = "--:--"
+        self.timerButton.title = self.timerConfig['spaces'] + self.timerConfig['title']
         
     def on_tick(self, sender):
         time_left = sender.end - sender.count
@@ -62,8 +62,8 @@ class taskBarApp(rumps.App):
             self.stop_timer()
             self.stopTimer.set_callback(None)
         else:
-            self.stopTimer.set_callback(self.stop_timer)
-            self.timerButton.title = '{:2d}:{:02d}'.format(mins, secs)
+            self.stopTimer.set_callback(self.stop_timer_callback)
+            self.timerButton.title = self.timerConfig['spaces'] + '{:02d}:{:02d}'.format(mins, secs)
         sender.count += 1
     def start_timer(self, sender):
         if sender.title.lower().startswith(("start", "continue")):
@@ -76,10 +76,13 @@ class taskBarApp(rumps.App):
             self.timerButton.title = self.timerConfig["continue"]
             self.timer.stop()
 
-    def stop_timer(self, _):
+    def stop_timer(self):
         self.reset_timer()
         self.stopTimer.set_callback(None)
         self.playPauseTimer.title = self.timerConfig["start"]
+    
+    def stop_timer_callback(self, _):
+        self.stop_timer()
     
     def getmode(self):
         '''returns 🔆 if in free mode or 💼 if in workmode'''
