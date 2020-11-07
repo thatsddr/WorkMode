@@ -18,10 +18,8 @@ class taskBarApp(rumps.App):
         #timer config
 
         self.timerConfig = {
-            #12 spaces to center the title, don't know if it works with every font size
-            'spaces':"            ",
             'title': "--:--",
-            'interval': 15,
+            'interval': 1500,
             "start": "Start Timer",
             "pause": "Pause Timer",
             "continue": "Continue Timer",
@@ -37,9 +35,8 @@ class taskBarApp(rumps.App):
         #timer-relevant stuff
         self.playPauseTimer = rumps.MenuItem("Start Timer", callback=self.start_timer)
         self.stopTimer = rumps.MenuItem("Stop Timer", callback=self.stop_timer_callback)
-        self.timerButton = rumps.MenuItem(self.timerConfig['spaces'] + self.timerConfig['title'])
         #menu final structure
-        self.menu = [self.work, None, self.timerButton, {"🍅 Clock":[self.playPauseTimer, self.stopTimer]}, None, {"Preferences": [self.saveNM, self.saveWM, self.osettings]}, None,self.info]
+        self.menu = [self.work, None, self.playPauseTimer, self.stopTimer, None, {"Preferences": [self.saveNM, self.saveWM, self.osettings]}, None, self.info]
         #initialize the title
         self.title = self.getmode()
         #check if change mode can have a callback
@@ -51,7 +48,6 @@ class taskBarApp(rumps.App):
         self.timer.stop()
         self.timer.count = 0
         self.stopTimer.set_callback(None)
-        self.timerButton.title = self.timerConfig['spaces'] + self.timerConfig['title']
         
     def on_tick(self, sender):
         time_left = sender.end - sender.count
@@ -63,23 +59,24 @@ class taskBarApp(rumps.App):
             self.stopTimer.set_callback(None)
         else:
             self.stopTimer.set_callback(self.stop_timer_callback)
-            self.timerButton.title = self.timerConfig['spaces'] + '{:02d}:{:02d}'.format(mins, secs)
+            self.title = self.getmode() + " - " + '{:02d}:{:02d}'.format(mins, secs)
         sender.count += 1
     def start_timer(self, sender):
         if sender.title.lower().startswith(("start", "continue")):
             if sender.title == self.timerConfig["start"]:
                 self.timer.count = 0
                 self.timer.end = self.timerConfig['interval']
-            self.timerButton.title= self.timerConfig["pause"]
+            self.playPauseTimer.title= self.timerConfig["pause"]
             self.timer.start()
         else:
-            self.timerButton.title = self.timerConfig["continue"]
+            self.playPauseTimer.title = self.timerConfig["continue"]
             self.timer.stop()
 
     def stop_timer(self):
         self.reset_timer()
         self.stopTimer.set_callback(None)
         self.playPauseTimer.title = self.timerConfig["start"]
+        self.title = self.getmode()
     
     def stop_timer_callback(self, _):
         self.stop_timer()
